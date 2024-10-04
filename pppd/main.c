@@ -921,6 +921,9 @@ create_pidfile(int pid)
 {
     FILE *pidfile;
 
+#ifndef PPP_WITH_TDB
+    mkdir_recursive(PPP_PATH_VARRUN);
+#endif
     slprintf(pidfilename, sizeof(pidfilename), "%s/%s.pid",
 	     PPP_PATH_VARRUN, ifname);
     if ((pidfile = fopen(pidfilename, "w")) != NULL) {

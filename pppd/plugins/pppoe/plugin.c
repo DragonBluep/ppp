@@ -57,9 +57,6 @@ static char const RCSID[] =
 
 char pppd_version[] = PPPD_VERSION;
 
-/* From sys-linux.c in pppd -- MUST FIX THIS! */
-extern int new_style_driver;
-
 char *pppd_pppoe_service = NULL;
 static char *acName = NULL;
 static char *existingSession = NULL;
@@ -421,10 +418,6 @@ PPPoEDevnameHook(char *cmd, char **argv, int doit)
 void
 plugin_init(void)
 {
-    if (!ppp_check_kernel_support() && !new_style_driver) {
-	fatal("Linux kernel does not support PPPoE -- are you running 2.4.x?");
-    }
-
     ppp_add_options(Options);
 
     info("PPPoE plugin from pppd %s", PPPD_VERSION);

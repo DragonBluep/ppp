@@ -224,14 +224,10 @@ static fd_set in_fds;		/* set of fds that wait_input waits for */
 static int max_in_fd;		/* highest fd set in in_fds */
 
 static int has_proxy_arp       = 0;
-static int driver_version      = 0;
-static int driver_modification = 0;
-static int driver_patch        = 0;
-static int driver_is_old       = 0;
 static int restore_term        = 0;	/* 1 => we've munged the terminal */
 static struct termios inittermios;	/* Initial TTY termios */
 
-int new_style_driver = 0;
+static const int new_style_driver = 1;
 
 static char loop_name[20];
 static unsigned char inbuf[512]; /* buffer for chars read from loopback */
@@ -249,9 +245,8 @@ static int	dynaddr_set;		/* 1 if ip_dynaddr set */
 static int	looped;			/* 1 if using loop */
 static int	link_mtu;		/* mtu for the link (not bundle) */
 
-static struct utsname utsname;	/* for the kernel version */
-static int kernel_version;
 #define KVERSION(j,n,p)	((j)*1000000 + (n)*1000 + (p))
+static const int kernel_version = KVERSION(4,9,0);
 
 #define MAX_IFS		100
 
@@ -1958,11 +1953,12 @@ int ccp_fatal_error (int unit)
  *
  * path_to_procfs - find the path to the proc file system mount point
  */
-static char proc_path[MAXPATHLEN];
-static int proc_path_len;
+static char proc_path[MAXPATHLEN] = "/proc";
+static int proc_path_len = 5;
 
 static char *path_to_procfs(const char *tail)
 {
+#if 0
     struct mntent *mntent;
     FILE *fp;
 
@@ -1984,6 +1980,7 @@ static char *path_to_procfs(const char *tail)
 	    fclose (fp);
 	}
     }
+#endif
 
     strlcpy(proc_path + proc_path_len, tail,
 	    sizeof(proc_path) - proc_path_len);
@@ -2872,6 +2869,8 @@ ppp_registered(void)
 
 int ppp_check_kernel_support(void)
 {
+    return 1; /* OpenWrt support ppp device "/dev/ppp" by default */
+#if 0
     int s, ok, fd;
     struct ifreq ifr;
     int    size;
@@ -2999,6 +2998,7 @@ int ppp_check_kernel_support(void)
     }
     close(s);
     return ok;
+#endif
 }
 
 #ifndef HAVE_LOGWTMP
@@ -3560,6 +3560,7 @@ get_pty(int *master_fdp, int *slave_fdp, char *slave_name, int uid)
     }
 #endif /* TIOCGPTN */
 
+#if 0
     if (sfd < 0) {
 	/* the old way - scan through the pty name space */
 	for (i = 0; i < 64; ++i) {
@@ -3584,6 +3585,7 @@ get_pty(int *master_fdp, int *slave_fdp, char *slave_name, int uid)
 	    }
 	}
     }
+#endif
 
     if (sfd < 0)
 	return 0;
@@ -3699,6 +3701,7 @@ get_host_seed(void)
 int
 sys_check_options(void)
 {
+#if 0
     if (demand && driver_is_old) {
 	ppp_option_error("demand dialling is not supported by kernel driver "
 		     "version %d.%d.%d", driver_version, driver_modification,
@@ -3709,6 +3712,7 @@ sys_check_options(void)
 	warn("Warning: multilink is not supported by the kernel driver");
 	multilink = 0;
     }
+#endif
     return 1;
 }
 

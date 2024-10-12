@@ -180,10 +180,6 @@ static void disconnect_pppoatm(void)
 void plugin_init(void)
 {
 #ifdef linux
-	extern int new_style_driver;	/* From sys-linux.c */
-	if (!ppp_check_kernel_support() && !new_style_driver)
-		fatal("Kernel doesn't support ppp_generic - "
-		    "needed for PPPoATM");
 #else
 	fatal("No PPPoATM support on this OS");
 #endif

@@ -501,10 +501,6 @@ static void pppol2tp_cleanup(void)
 void plugin_init(void)
 {
 #if defined(__linux__)
-	extern int new_style_driver;	/* From sys-linux.c */
-	if (!ppp_check_kernel_support() && !new_style_driver)
-		fatal("Kernel doesn't support ppp_generic - "
-		    "needed for PPPoL2TP");
 #else
 	fatal("No PPPoL2TP support on this OS");
 #endif
